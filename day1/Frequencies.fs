@@ -10,12 +10,32 @@ let matchStringWithFrequency (freq:string) =
     else
         0
 
-let rec detectRepetitionOfFrequencies (prevFreqs:List<int>) (freqs:List<int>) (initialFreqs:List<int>) (resultFromPrevious:int) = 
+let input = List.map matchStringWithFrequency (frequencies "frequencies.txt")
+
+type FrequencyState = {
+    Frequencies: int list
+    Previous: int list
+    ResultFromPrevious: int
+    Result: int
+    Iteration: int
+}
+let initialState = {
+    Frequencies = input
+    Previous = [0]
+    ResultFromPrevious = 0
+    Result = 0
+    Iteration = 0
+}
+
+let rec detectRepetitionOfFrequencies state:FrequencyState =
     let res = 
-        (List.take 1 freqs |> List.sum) + resultFromPrevious
-    if List.contains res prevFreqs then
-        res
-    else if freqs.Length = 1 then
-        detectRepetitionOfFrequencies (List.append prevFreqs [res]) initialFreqs initialFreqs res 
+        state.Frequencies.Head + state.ResultFromPrevious
+    if List.contains res state.Previous then
+        {state with Result = res}
+    else if state.Frequencies.Length = 1 then
+        printfn "%i" state.Iteration 
+        let newPrevFreqs = {state with Previous = res :: state.Previous; ResultFromPrevious = res; Frequencies = input; Iteration = state.Iteration + 1}
+        detectRepetitionOfFrequencies newPrevFreqs
     else 
-        detectRepetitionOfFrequencies (List.append prevFreqs [res]) (List.skip 1 freqs) initialFreqs res
+        let newPrevFreqsAndFreqs = {state with Previous = res :: state.Previous; Frequencies = List.skip 1 state.Frequencies; ResultFromPrevious = res}
+        detectRepetitionOfFrequencies newPrevFreqsAndFreqs
