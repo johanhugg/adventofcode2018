@@ -10,20 +10,12 @@ let matchStringWithFrequency (freq:string) =
     else
         0
 
-let rec detectRepetitionOfFrequencies (prevFreqs:List<int>) (freqs:List<int>) (initialFreqs:List<int>) = 
-    printfn "Previous: %A" prevFreqs
-    printfn "Current:  %A" freqs
+let rec detectRepetitionOfFrequencies (prevFreqs:List<int>) (freqs:List<int>) (initialFreqs:List<int>) (resultFromPrevious:int) = 
     let res = 
-        if freqs.Length >= 2 then
-            List.take 2 freqs |> List.sum
-        else 
-            freqs |> List.sum
-
-    if freqs.Length = 1 then
-        detectRepetitionOfFrequencies prevFreqs initialFreqs initialFreqs
-    else if List.contains res prevFreqs then
-        printfn "%A" prevFreqs
-        printfn "%A" freqs
+        (List.take 1 freqs |> List.sum) + resultFromPrevious
+    if List.contains res prevFreqs then
         res
+    else if freqs.Length = 1 then
+        detectRepetitionOfFrequencies (List.append prevFreqs [res]) initialFreqs initialFreqs res 
     else 
-        detectRepetitionOfFrequencies (List.append prevFreqs [res]) (List.append [res] (List.skip 2 freqs)) initialFreqs
+        detectRepetitionOfFrequencies (List.append prevFreqs [res]) (List.skip 1 freqs) initialFreqs res

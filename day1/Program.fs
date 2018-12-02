@@ -1,12 +1,10 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open Frequencies
 
 [<EntryPoint>]
 let main argv =
     let loadedFrequencies = frequencies "frequencies.txt"
     let freqs = List.map matchStringWithFrequency loadedFrequencies
-    let result = detectRepetitionOfFrequencies (List.append [0] (List.take 1 freqs)) freqs freqs
+    let result = detectRepetitionOfFrequencies [0] freqs freqs 0
     printfn "%i" result
-    0 // return an integer exit code
+    0 
