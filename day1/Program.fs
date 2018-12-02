@@ -5,6 +5,8 @@ open Frequencies
 
 [<EntryPoint>]
 let main argv =
-    let result = frequencies.Split("\n") |> Array.toList |> List.map matchStringWithFrequency |> List.choose id |> List.sum
-    printfn "%i" result 
+    let loadedFrequencies = frequencies "frequencies.txt"
+    let freqs = List.map matchStringWithFrequency loadedFrequencies
+    let result = detectRepetitionOfFrequencies (List.append [0] (List.take 1 freqs)) freqs freqs
+    printfn "%i" result
     0 // return an integer exit code
