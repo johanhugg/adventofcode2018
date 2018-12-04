@@ -20,7 +20,6 @@ let findTwosAndThrees line =
 
 [<EntryPoint>]
 let main argv =
-    let line = "aabbccddd"
     let arr = List.map (fun x -> [for c in x -> c]) input |> List.map (List.countBy id) |> List.map findTwosAndThrees
 
 
